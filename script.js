@@ -3,7 +3,18 @@ const addButton = document.getElementById('add-note-button');
 const notesContainer = document.getElementById('notes-container');
 const toggleThemeButton = document.getElementById('toggle-theme-button');
 const body = document.body;
-const colors = ['note-yellow'];
+const colors = ['note-yellow', 'note-blue', 'note-pink'];
+
+function saveNotes() {
+    const notes = [];
+    document.querySelectorAll('.note').forEach(note => {
+        notes.push({
+            text: note.textContent.slice(0, -1),
+            color: [...note.classList].find(c => c.startsWith('note-'))
+        });
+    });
+    localStorage.setItem('notes', JSON.stringify(notes));
+}
 
 function createNoteElement(text, colorClass) {
     const noteDiv = document.createElement('div');
@@ -19,8 +30,7 @@ function createNoteElement(text, colorClass) {
 }
 
 function loadNotes() {
-    const storedNotes = [];
-    console.log(storedNotes);
+    const storedNotes = localStorage.getItem('notes');
     if (storedNotes) {
         const notes = JSON.parse(storedNotes);
         notes.forEach(noteData => {
@@ -89,8 +99,8 @@ addButton.addEventListener('click', () => {
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const newNote = createNoteElement(noteText, randomColor);
         notesContainer.appendChild(newNote);
-        const newNoteErr = createNoteElement(noteText, randomColor);
-        notesContainer.appendChild(newNoteErr);
+        
+        
         noteInput.value = '';
         addButton.disabled = true;
         saveNotes();
